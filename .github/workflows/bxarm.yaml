@@ -1,16 +1,12 @@
-name: BXARM on Linux
+name: ICSTAT on GHA
 
 on:
   push:
   workflow_dispatch:
 
-env:
-  COMMON_DIR: /opt/iarsystems/bxarm-9.60.1/common/bin
-  TARGET_DIR: /opt/iarsystems/bxarm-9.60.1/arm/bin
-
 jobs:
   analyze:
-    runs-on: fae-emea-lnx
+    runs-on: ubuntu-latest
     permissions:
       security-events: write
       actions: read
@@ -18,14 +14,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: ichecks
-        run: |
-             $TARGET_DIR/ichecks --all --output cstat-checks.manifest 
-
-      - name: icstat
-        run: |
-             $TARGET_DIR/icstat --db cstat.db --checks cstat-checks.manifest --sarif_dir sarif analyze -- $TARGET_DIR/iccarm main.c
 
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v3
